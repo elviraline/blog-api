@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: Blog API
+  description: API de gestion d'articles de blog
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /articles:
+    get:
+      summary: Récupère tous les articles
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: author
+          in: query
+          schema:
+            type: string
+        - name: date
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Succès
+    post:
+      summary: Crée un nouvel article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - author
+                - content
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                content:
+                  type: string
+                category:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Article créé
+        '400':
+          description: Données invalides
+  /articles/{id}:
+    get:
+      summary: Récupère un article par ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Succès
+        '404':
+          description: Article non trouvé
+    put:
+      summary: Modifie un article
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                category:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Article modifié
+        '404':
+          description: Article non trouvé
+    delete:
+      summary: Supprime un article
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Suppression réussie
+        '404':
+          description: Article non trouvé
+  /articles/search:
+    get:
+      summary: Recherche d'articles par titre ou contenu
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Résultats
+        '400':
+          description: Paramètre query manquant
